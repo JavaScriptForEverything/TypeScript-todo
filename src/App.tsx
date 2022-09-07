@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react'
+import AddRemainder from './components/addRemainder'
+import RemenderList from './components/rementerList'
+import * as productReducer from './store/productReducer'
+import { Remainder } from './types/remainder'
 
-function App() {
+
+const App = () => {
+  const [ remainders, setRemainders ] = useState<Remainder[]>([])
+  console.log({ length: remainders.length })
+
+  useEffect(() => {
+    (async() => {
+      const todos = await productReducer.getTodos()
+      setRemainders(todos)
+    })()
+  }, [])
+
+
+  // const listItemDeleteHandler = () => {
+  const listItemDeleteHandler = (id: number) => () => {
+    const filteredRemainders: Remainder[] = remainders.filter( item => item.id !== id )
+    setRemainders(filteredRemainders)
+  }
+
+  const listAddHandler = async (title: string) => {
+    // console.log({ title })
+    const addRemainder = await productReducer.addTodo(title)
+    setRemainders([ addRemainder, ...remainders ])
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div>
+      <AddRemainder 
+        onAddList={listAddHandler}
+      />
 
-export default App;
+      <br /> <br />
+      <RemenderList 
+        items={remainders} 
+        onRemoveTodo={listItemDeleteHandler}
+      />
+    </div>
+  )
+}
+export default App
