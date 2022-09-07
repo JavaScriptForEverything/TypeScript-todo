@@ -2,6 +2,7 @@ import express, { Application } from 'express'
 import morgan from 'morgan'
 import { connection } from 'mongoose'
 import database from './models/database'
+import cors from 'cors'
 
 import * as errorHandler from './controllers/errorController'
 import productRouter from './routes/productRoute'
@@ -12,6 +13,7 @@ app.use(express.json())   // body-barser by default added in exporesv5
 
 // morgan show api logs, to indicate which route it hits 
 app.use(morgan('dev'))
+app.use(cors())
 
 app.use('/api/products', productRouter)
 
