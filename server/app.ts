@@ -1,5 +1,7 @@
 import express, { Application } from 'express'
 import morgan from 'morgan'
+import { connection } from 'mongoose'
+import database from './models/database'
 
 import * as errorHandler from './controllers/errorController'
 import productRouter from './routes/productRoute'
@@ -19,4 +21,8 @@ app.use(errorHandler.globalErrorHandler)
 
 
 const PORT: number = 5000;
-app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
+app.listen(PORT, async() => {
+
+  await database()
+  console.log(`Server is running on port: ${PORT} on database: ${connection.host}`)
+})
