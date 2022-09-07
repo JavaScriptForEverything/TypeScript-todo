@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose'
 
-type ProductSchemaProps = {
+type TProduct = {
   name: string
   summary: string
   price?: number
 }
 
-const productSchema = new Schema<ProductSchemaProps>({
+const productSchema = new Schema<TProduct>({
   name: {
     type: String,
     required: true,
@@ -26,4 +26,4 @@ const productSchema = new Schema<ProductSchemaProps>({
   timestamps: true
 })
 
-export default model<ProductSchemaProps>('Product', productSchema)
+export default model<TProduct>('Product', productSchema)

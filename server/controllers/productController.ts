@@ -23,3 +23,27 @@ export const addProduct: RequestHandler = async (req, res, next) => {
     product
   })
 }
+
+
+export const updateProduct: RequestHandler = async (req, res, next) => {
+  const { productId } = req.params
+  const product = await Product.findByIdAndUpdate(productId, req.body)
+
+  res.status(201).json({
+    status: 'success',
+    product
+  })
+}
+
+export const deleteProduct: RequestHandler = async (req, res, next) => {
+  const { productId } = req.params
+  const product = await Product.findByIdAndDelete(productId)
+
+  res.status(201).json({
+    status: 'success',
+    product
+  })
+}
+
+
+
