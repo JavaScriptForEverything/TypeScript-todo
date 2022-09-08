@@ -11,6 +11,7 @@ $ sudo systemctl start mongodb          : Start MongoDB database
 $ sudo systemctl status mongodb         : Check database status (running or not)
 $ mongo                                 : Check Database By accessing into database
 
+$ cd server
 $ yarn dev                              : Start Server
 ```
 
@@ -23,5 +24,6 @@ $ yarn dev                              : Start Server
 
 
 ```
+$ cd client
 $ yarn start                            : Start Client
 ```
