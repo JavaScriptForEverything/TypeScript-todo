@@ -1,28 +1,36 @@
 import axios from 'axios'
-import { Remainder } from '../types/remainder'
+import { IFields } from '../types/addProduct'
+import { Tproduct } from '../types/product'
 
-axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com'
+axios.defaults.baseURL = 'http://localhost:5000'
 
-
-export const getTodos  = async () => {
-  const { data } = await axios.get<Remainder[]>('/todos')
-  return data
+type GetProductsProps = {
+  products: Tproduct[]
 }
 
-export const addTodo  = async (title: string) => {
-  /**
-   * why we need only title, we also need id isn't it ?
-   *  - Yes, but when we add todo, it generate id from server side and
-   *    our list item will be reloaded when new value comes,
-   * 
-   * But if we use Redux, then we want to update redux store, with exact
-   * value as server pass, than we need to pass id too, which is unique
-   */
-  const { data } = await axios.post<Remainder>('/todos', { title })
-  return data
+type AddProductProps = {
+  product: Tproduct
 }
 
-export const removeTodo  = async (id: number) => {
-  const { data } = await axios.delete<Remainder>(`/todos/${id}`)
-  return data
+export const getProducts = async () => {
+  const { data: { products } } = await axios.get<GetProductsProps>('/api/products')
+
+  return products
+}
+
+export const addProduct = async (data:IFields) => {
+  const { data: { product } } = await axios.post<AddProductProps>('/api/products', data)
+
+  return product
+}
+
+export const updateProduct = async (productId: string, data:Tproduct) => {
+  const { data: { product } } = await axios.patch<AddProductProps>(`/api/products/${productId}`, data)
+
+  return product
+}
+export const removeProduct = async (productId: string) => {
+  const { data: { product } } = await axios.delete<AddProductProps>(`/api/products/${productId}`)
+
+  return product
 }

@@ -1,46 +1,48 @@
 import { useEffect, useState } from 'react'
-import AddRemainder from './components/addRemainder'
-import RemenderList from './components/rementerList'
+import ProductList from './components/productList'
+import AddProduct from './components/addProduct'
 import * as productReducer from './store/productReducer'
-import { Remainder } from './types/remainder'
-
+import { Tproduct } from './types/product'
+import { IFields } from './types/addProduct'
 
 const App = () => {
-  const [ remainders, setRemainders ] = useState<Remainder[]>([])
-  console.log({ length: remainders.length })
+  const [ products, setProducts ] = useState<Tproduct[]>([])
 
   useEffect(() => {
-    (async() => {
-      const todos = await productReducer.getTodos()
-      setRemainders(todos)
+    (async () => {
+      const getProducts = await productReducer.getProducts()
+      setProducts(getProducts)
     })()
   }, [])
 
 
-  // const listItemDeleteHandler = () => {
-  const listItemDeleteHandler = (id: number) => () => {
-    const filteredRemainders: Remainder[] = remainders.filter( item => item.id !== id )
-    setRemainders(filteredRemainders)
+  const addProductHandler = async (fields: IFields) => {
+    const product = await productReducer.addProduct(fields)
+    setProducts([ product, ...products ])
+    
   }
 
-  const listAddHandler = async (title: string) => {
-    // console.log({ title })
-    const addRemainder = await productReducer.addTodo(title)
-    setRemainders([ addRemainder, ...remainders ])
+  const productDeleteHandler = (productId: string) => async() => {
+    const product = await productReducer.removeProduct(productId)
+    if(!product) return
+
+    const filteredProducts = products.filter(item => item._id !== productId )
+    setProducts(filteredProducts)
   }
+
 
   return (
-    <div>
-      <AddRemainder 
-        onAddList={listAddHandler}
+    <>
+      <AddProduct 
+        onAddProduct={addProductHandler}
+      />
+      <ProductList 
+        products={products} 
+        onClickDeleteProduct={productDeleteHandler}
       />
 
-      <br /> <br />
-      <RemenderList 
-        items={remainders} 
-        onRemoveTodo={listItemDeleteHandler}
-      />
-    </div>
+      
+    </>
   )
 }
 export default App
