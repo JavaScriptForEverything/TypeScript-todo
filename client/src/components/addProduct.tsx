@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import * as productReducer from '../store/productReducer'
+import { useAppDispatch, useAppSelector } from '../store/hoots'
 import { IFields } from '../types/addProduct'
-import { Tproduct } from '../types/product'
 
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
@@ -19,20 +20,9 @@ const inputItems: InputProps[] = [
 ]
 
 
-interface AddProductProps {
-  onAddProduct: (fields: IFields) => void
-  updateProductData: Tproduct
-  clearProductData: (product: Tproduct) => void     // setProduct()
-  updateProductSubmitHandler: (product: IFields) => void
-}
-
-const AddProduct = ( props: AddProductProps): JSX.Element => {
-  const { 
-    onAddProduct, 
-    updateProductData,
-    clearProductData,
-    updateProductSubmitHandler
-  } = props
+const AddProduct = (): JSX.Element => {
+  const dispatch = useAppDispatch()
+  const { loading, updatableProduct } = useAppSelector( state => state.product )
 
   const [ fields, setFields ] = useState<IFields>({
     name: '',
@@ -47,11 +37,11 @@ const AddProduct = ( props: AddProductProps): JSX.Element => {
 
   useEffect(() => {
     setFields({
-      name: updateProductData.name,
-      price: updateProductData.price as number,
-      summary: updateProductData.summary
+      name: updatableProduct.name,
+      price: updatableProduct.price as number,
+      summary: updatableProduct.summary
     })
-  }, [updateProductData])
+  }, [updatableProduct])
 
   const changeHandler = (name: string) => (evt: React.ChangeEvent<HTMLInputElement>) => {
     setFields({ ...fields, [name]: evt.target.value })
@@ -59,7 +49,7 @@ const AddProduct = ( props: AddProductProps): JSX.Element => {
 
   const clearButtonHandler = () => {
     // 1. clear product = {} empty too
-    clearProductData({ _id: '', name: '', price: 0, summary: '' })
+    dispatch(productReducer.getUpdatableProduct({ _id: '', name: '', price: 0, summary: '' } )) 
 
     // 2. clear form's input values
     setFields({ name: '', summary: '', price: 0 })
@@ -72,13 +62,14 @@ const AddProduct = ( props: AddProductProps): JSX.Element => {
     // just here but we will use it for validation later
     if(false) return setFieldsError(fields)
 
-    if( updateProductData._id) {
-      updateProductSubmitHandler(fields)
-      clearProductData({ _id: '', name: '', price: 0, summary: '' })
+    if(updatableProduct) {
+      dispatch(productReducer.updateProduct(updatableProduct._id, fields))
+      dispatch(productReducer.getUpdatableProduct({ _id: '', name: '', price: 0, summary: '' } )) 
       setFields({ name: '', summary: '', price: 0 })
+
       return
     }     
-    onAddProduct(fields)
+    dispatch(productReducer.addProduct(fields))
     setFields({ name: '', summary: '', price: 0 })
   }
 
@@ -113,7 +104,11 @@ const AddProduct = ( props: AddProductProps): JSX.Element => {
             type='submit' 
             variant='contained' 
           >
-            { !!updateProductData._id ? 'Update' : 'Add' }
+            { !!updatableProduct._id 
+              // ? 'Update'
+              ?  (loading ? 'Updating...' : 'Update')
+              : 'Add' 
+            }
             </Button>
         </Box>
      </form>

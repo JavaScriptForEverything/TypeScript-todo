@@ -1,4 +1,5 @@
-import { Tproduct } from '../types/product'
+import { useAppDispatch, useAppSelector } from '../store/hoots'
+import * as productReducer from '../store/productReducer'
 
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
@@ -9,18 +10,18 @@ import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-type ProductListProps = {
-  products: Tproduct[]
-  onClickDeleteProduct: (productId: string) => () => void
-  onClickEditProduct: (productId: string) => () => void
-}
 
-const ProductList = ( props: ProductListProps): JSX.Element => {
-  const {
-    products,
-    onClickDeleteProduct,
-    onClickEditProduct
-  } = props
+const ProductList = (): JSX.Element => {
+  const dispatch = useAppDispatch()
+  const { products } = useAppSelector( state => state.product )
+
+  const productDeleteHandler = (productId: string) => () => {
+    dispatch(productReducer.removeProduct(productId))
+  }
+  const productUpdateHandler = (productId: string) => () => {
+    const productFound = products.find( product => product._id === productId)
+    if(productFound) dispatch(productReducer.getUpdatableProduct( productFound )) 
+  }
 
   return (
     <>
@@ -30,8 +31,8 @@ const ProductList = ( props: ProductListProps): JSX.Element => {
             <ListItemText primary={product.name} secondary={product.summary} />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ListItemText sx={{ mr: 4 }}>{product.price}</ListItemText>
-              <IconButton onClick={onClickEditProduct(product._id)}><EditIcon /></IconButton>
-              <IconButton onClick={onClickDeleteProduct(product._id)}><DeleteIcon /></IconButton>
+              <IconButton onClick={productUpdateHandler(product._id)}><EditIcon /></IconButton>
+              <IconButton onClick={productDeleteHandler(product._id)}><DeleteIcon /></IconButton>
             </Box>
           </ListItem>
         ))}
