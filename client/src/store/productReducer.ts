@@ -24,7 +24,7 @@ export const addProduct = async (data:IFields) => {
   return product
 }
 
-export const updateProduct = async (productId: string, data:Tproduct) => {
+export const updateProduct = async (productId: string, data:IFields) => {
   const { data: { product } } = await axios.patch<AddProductProps>(`/api/products/${productId}`, data)
 
   return product

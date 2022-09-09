@@ -7,13 +7,19 @@ import { IFields } from './types/addProduct'
 
 const App = () => {
   const [ products, setProducts ] = useState<Tproduct[]>([])
+  const [ product, setProduct ] = useState<Tproduct>({
+    _id: '',
+    name: '',
+    price: 0,
+    summary: ''
+  })
 
   useEffect(() => {
     (async () => {
       const getProducts = await productReducer.getProducts()
       setProducts(getProducts)
     })()
-  }, [])
+  }, [product])
 
 
   const addProductHandler = async (fields: IFields) => {
@@ -31,14 +37,29 @@ const App = () => {
   }
 
 
+  const productEditHandler = (productId: string) => () => {
+    const foundProduct = products.find( product => product._id === productId)
+    if(foundProduct) setProduct(foundProduct)
+  }
+  const updateProductSubmitHandler = async (fields: IFields) => {
+    const updatedProduct = await productReducer.updateProduct(product._id, fields)
+    const updatedProducts = products.map(item => item._id === updatedProduct._id ? { ...item, updatedProduct } : item )
+    setProducts(updatedProducts)
+
+  }
+
   return (
     <>
       <AddProduct 
         onAddProduct={addProductHandler}
+        updateProductData={product}
+        clearProductData={setProduct}
+        updateProductSubmitHandler={updateProductSubmitHandler}
       />
       <ProductList 
         products={products} 
         onClickDeleteProduct={productDeleteHandler}
+        onClickEditProduct={productEditHandler}
       />
 
       

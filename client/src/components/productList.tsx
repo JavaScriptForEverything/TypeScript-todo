@@ -7,14 +7,21 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import IconButton from '@mui/material/IconButton'
 
+import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 type ProductListProps = {
   products: Tproduct[]
   onClickDeleteProduct: (productId: string) => () => void
+  onClickEditProduct: (productId: string) => () => void
 }
 
-const ProductList = ({ products, onClickDeleteProduct }: ProductListProps): JSX.Element => {
+const ProductList = ( props: ProductListProps): JSX.Element => {
+  const {
+    products,
+    onClickDeleteProduct,
+    onClickEditProduct
+  } = props
 
   return (
     <>
@@ -22,8 +29,9 @@ const ProductList = ({ products, onClickDeleteProduct }: ProductListProps): JSX.
         {products.map(product => (
           <ListItem key={product._id} >
             <ListItemText primary={product.name} secondary={product.summary} />
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <ListItemText>{product.price}</ListItemText>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ListItemText sx={{ mr: 4 }}>{product.price}</ListItemText>
+              <IconButton onClick={onClickEditProduct(product._id)}><EditIcon /></IconButton>
               <IconButton onClick={onClickDeleteProduct(product._id)}><DeleteIcon /></IconButton>
             </Box>
           </ListItem>
