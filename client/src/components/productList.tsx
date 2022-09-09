@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { Tproduct } from '../types/product'
 
 import Box from '@mui/material/Box'

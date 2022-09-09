@@ -69,6 +69,9 @@ const AddProduct = ( props: AddProductProps): JSX.Element => {
   const submitHandler = (evt: React.FormEvent) => {
     evt.preventDefault()
 
+    // just here but we will use it for validation later
+    if(false) return setFieldsError(fields)
+
     if( updateProductData._id) {
       updateProductSubmitHandler(fields)
       clearProductData({ _id: '', name: '', price: 0, summary: '' })

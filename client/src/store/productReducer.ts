@@ -4,10 +4,22 @@ import { Tproduct } from '../types/product'
 
 axios.defaults.baseURL = 'http://localhost:5000'
 
+/**
+ * GetProductsTpros will be the Retrun Properties from server API:
+ *    status: 'success',
+ *    length: products.length,
+ *    products,
+ */
 type GetProductsProps = {
-  products: Tproduct[]
+  products: Tproduct[]        
 }
 
+/**
+ *  AddProductProps will be the props of exact copy ProductSchemaProps
+ *    name: { type: String, ... }     => name: string,
+ *    email: { type: String, ... }    => email: string,
+ *    ...
+ */
 type AddProductProps = {
   product: Tproduct
 }
