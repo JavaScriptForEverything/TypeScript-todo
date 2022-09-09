@@ -1,8 +1,11 @@
 ## Express with TypeScript
 
+###### Used Libraries
+
         . TypeScript
         . Express
         . Mongoose
+
 
 ###### Setup Express App
 
