@@ -21,32 +21,32 @@
 Method-1: With combineReducers()
 
 ```
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
-import productReducer from './productReducer' 					
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+import productReducer from './productReducer'
 
 const rootReducer = combineReducers({
         product: productReducer
 })
 export const store = configureStore({ reducer: rootReducer })
 
-export type RootState = ReturnType<typeof rootReducer> 				
+export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch
 ```
 
 Method-2: Without combineReducers() Because: automatically applied it behind the sence. 	
 
 ```
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
-import productReducer from './productReducer' 					
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+import productReducer from './productReducer'
 
 export const store = configureStore({
-        reducer: { 									
+        reducer: {
                 product: productReducer
-        } 										
+        }
 })
-export type RootState = ReturnType<typeof store.getState> 			
+export type RootState = ReturnType<typeof store.getState> 
 export type AppDispatch = typeof store.dispatch
 ```
 
@@ -54,26 +54,26 @@ export type AppDispatch = typeof store.dispatch
 
 ###### /store/productReducer.ts
 
-        NB:											
-        . InitialState must have types as regular object have in TypeScript. 			
+        NB:
+        . InitialState must have types as regular object have in TypeScript.
         . every `action.payload` have Generic types called, 	PayloadType<>
 
 
 
 ```
-import { createSlice, PayloadAction } from '@reduxjs/toolkit' 				
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface IinitialState { 									
+interface IinitialState {
         loading: boolean
         error: string
         products: Tproduct[] 	// type Tproduct = { name: string, price?: number, summar: string
-} 												
+}
 
-const initialState: IinitialState = { 							
-        loading: false, 										
+const initialState: IinitialState = {
+        loading: false,
         error: '',
         products: []
-} 												
+}
 
 
 const { reducer, actions } = createSlice({
@@ -143,7 +143,3 @@ Every time we need to supply types with: as bellow, instead use 2nd method:
         dispatch( productReducer.getProducts() )
         }, [product])
 ```
-
-
-
-
